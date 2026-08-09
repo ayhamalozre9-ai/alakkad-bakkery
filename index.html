@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حلويات العقاد - Alakkad Sweets</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #120c0a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(212, 175, 55, 0.25);
+            --accent-gold: #d4af37;
+            --accent-gold-light: #f3e5ab;
+            --text-light: #f8f5f0;
+            --text-muted: #baaba0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* -------------------------------------------------------------
+           القسم الأول: الهيرو وتفاعل GSAP كاتو العقاد
+        ------------------------------------------------------------- */
+        .scroll-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pin-stage {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-bg {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4.5rem, 16vw, 15rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            color: rgba(212, 175, 55, 0.06);
+            letter-spacing: 4px;
+            user-select: none;
+            white-space: nowrap;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .content-panel {
+            position: absolute;
+            width: calc(100% - 32px);
+            max-width: 460px;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .content-panel h2 {
+            font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .content-panel p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        .hero-intro {
+            position: absolute;
+            bottom: 12%;
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+
+        .hero-intro h1 {
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
+            color: var(--accent-gold-light);
+            font-weight: 700;
+        }
+
+        .hero-intro p {
+            color: var(--text-muted);
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+        }
+
+        .cake-wrapper {
+            position: absolute;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .cake-item {
+            position: absolute;
+            width: clamp(230px, 30vw, 420px);
+            height: clamp(230px, 30vw, 420px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85));
+        }
+
+        .main-cake {
+            z-index: 6;
+        }
+
+        .side-cake {
+            opacity: 0;
+            scale: 0.65;
+        }
+
+        .cake-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Responsive GSAP Hero */
+        @media (min-width: 901px) {
+            .content-panel.left-panel {
+                left: 8%;
+                right: auto;
+                margin: 0;
+                top: 26%;
+            }
+
+            .content-panel.right-panel {
+                right: 8%;
+                left: auto;
+                margin: 0;
+                top: 26%;
+            }
+
+            .content-panel.center-panel {
+                top: 12%;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                max-width: 580px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero-intro {
+                bottom: 10%;
+            }
+
+            .content-panel {
+                padding: 1rem;
+                max-width: 48%;
+            }
+
+            .content-panel.left-panel {
+                left: 3%;
+                top: 24%;
+            }
+
+            .content-panel.right-panel {
+                right: 3%;
+                top: 24%;
+            }
+
+            .content-panel.center-panel {
+                top: 8%;
+                max-width: 92%;
+            }
+
+            .cake-item {
+                width: clamp(140px, 40vw, 220px);
+                height: clamp(140px, 40vw, 220px);
+            }
+        }
+
+        /* -------------------------------------------------------------
+           القسم الثاني: القائمة (غريد 3 أعمدة × 6 صفوف)
+        ------------------------------------------------------------- */
+        .menu-section {
+            padding: 80px 0;
+            background: radial-gradient(circle at top, #241611 0%, #120c0a 70%);
+            border-top: 1px solid var(--card-border);
+        }
+
+        .menu-title-area {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .menu-title-area h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: var(--accent-gold-light);
+            font-weight: 900;
+        }
+
+        .menu-title-area p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* شبكة الغريد - 3 أعمدة رئيسية */
+        .three-column-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        /* تصميم كارد الصنف (صورة + تفاصيل وسعر على الجانب) */
+        .item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            border-color: var(--accent-gold);
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-3px);
+        }
+
+        .item-img-wrapper {
+            width: 85px;
+            height: 85px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 6px;
+        }
+
+        .item-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .item-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .item-price {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            white-space: nowrap;
+        }
+
+        .item-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* الاستجابة للشاشات المتوسطة والصغيرة */
+        @media (max-width: 1024px) {
+            .three-column-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* تتوزع على عمودين في الآيباد */
+            }
+        }
+
+        @media (max-width: 650px) {
+            .three-column-grid {
+                grid-template-columns: 1fr;
+                /* عمود واحد في الجوال */
+            }
+
+            .item-card {
+                padding: 12px;
+            }
+
+            .item-img-wrapper {
+                width: 75px;
+                height: 75px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- القسم الأول: الهيرو المربوط بالتأثير التفاعلي GSAP -->
+    <div class="scroll-container" id="scrollSection">
+        <div class="pin-stage">
+            <div class="brand-bg" id="brandBg">ALAKKAD</div>
+
+            <div class="hero-intro" id="heroIntro">
+                <h1>حلويات العقاد</h1>
+                <p>مذاق الفخامة والأصالة في كل قطعة</p>
+            </div>
+
+            <div class="content-panel left-panel" id="panelAbout">
+                <span class="badge">قصتنا وعراقتنا</span>
+                <h2>عن محل العقاد</h2>
+                <p>تأسس محل العقاد للحلويات ليقدم أصالة المذاق الشرقي والغربي بأعلى معايير الابتكار والاحترافية.</p>
+            </div>
+
+            <div class="content-panel right-panel" id="panelQuality">
+                <span class="badge">الجودة والإتقان</span>
+                <h2>سر نكهتنا الفريدة</h2>
+                <p>نحرص على استخدام أفضل المكونات العالمية الطازجة؛ بدءاً من الشوكولاتة البلجيكية والزبدة الطبيعية.</p>
+            </div>
+
+            <div class="content-panel center-panel" id="panelTrio">
+                <span class="badge">التشكيلة الملكية</span>
+                <h2>ابتكاراتنا الأكثر مبيعاً</h2>
+                <p>تذوق تشكيلتنا الخاصة المصممة بحب لتناسب كافة أذواقكم ومناسباتكم السعيدة</p>
+            </div>
+
+            <div class="cake-wrapper">
+                <div class="cake-item side-cake" id="leftCake">
+                    <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png" alt="كيك التوت"
+                        class="cake-img">
+                </div>
+
+                <div class="cake-item main-cake" id="mainCake">
+                    <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png" alt="قطع كاتو"
+                        class="cake-img">
+                </div>
+
+                <div class="cake-item side-cake" id="rightCake">
+                    <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                        alt="كيك الفراولة" class="cake-img">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- القسم الثاني: المينو (شبكة غريد 3 أعمدة × 6 صفوف = 18 صنف) -->
+    <section class="menu-section">
+        <div class="container">
+
+            <div class="menu-title-area">
+                <span class="badge">قائمة المنتجات الكاملة</span>
+                <h2>قائمة حلويات العقاد</h2>
+                <p>تصفح أصنافنا الفاخرة مرتبة في ثلاثة أعمدة أفقية لتسهيل اختياراتكم</p>
+            </div>
+
+            <div class="three-column-grid">
+
+                <!-- ===== العمود الأول (6 أصناف) ===== -->
+                <!-- صنف 1 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="تشيز كيك الفراولة">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">تشيز كيك الفراولة</h4>
+                            <span class="item-price">$18.00</span>
+                        </div>
+                        <p class="item-desc">طبقات الكريمة المخفوقة مع صوص الفراولة الطبيعي والقاعدة الهشة.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 2 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="كب كيك الشوكولاتة">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">كب كيك الشوكولاتة</h4>
+                            <span class="item-price">$14.00</span>
+                        </div>
+                        <p class="item-desc">عجينة غنية بحشوة الغاناش البلجيكي 70% وتغطية الكاكاو.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 3 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="فانيلا بريميوم">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">فانيلا جولدن بريميوم</h4>
+                            <span class="item-price">$16.00</span>
+                        </div>
+                        <p class="item-desc">نكهة الفانيليا المدغشقرية مع الفستق الحلبي الفاخر والعسل.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 4 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="كيك التوت">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">كيك التوت البري</h4>
+                            <span class="item-price">$19.00</span>
+                        </div>
+                        <p class="item-desc">حبيبات التوت البري الطازجة مع كريمة الفانيليا الفرنسية.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 5 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="تارت الشوكولاتة">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">تارت الشوكولاتة الداكنة</h4>
+                            <span class="item-price">$15.50</span>
+                        </div>
+                        <p class="item-desc">عجينة التارت المقرمشة محشوة بالكاكاو السويسري الفاخر.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 6 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="كيك الريد فلفيت">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">كيك الريد فلفيت</h4>
+                            <span class="item-price">$17.00</span>
+                        </div>
+                        <p class="item-desc">طبقات الريد فلفيت الهشة مع كريمة الجبن الناعمة والمميزة.</p>
+                    </div>
+                </div>
+
+
+                <!-- ===== العمود الثاني (6 أصناف) ===== -->
+                <!-- صنف 7 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="تارت الفواكه">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">تارت الفواكه المشكلة</h4>
+                            <span class="item-price">$21.00</span>
+                        </div>
+                        <p class="item-desc">قطع الفواكه الموسيقية فوق طبقة غنية من الكاسترد طازجة.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 8 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="كرواسون اللوز">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">كرواسون اللوز والعسل</h4>
+                            <span class="item-price">$8.50</span>
+                        </div>
+                        <p class="item-desc">عجينة مورقة بالزبدة الطبيعية محشوة بخليط اللوز المحمص.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 9 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="دونات النوتيلا">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">دونات النوتيلا الملكية</h4>
+                            <span class="item-price">$7.00</span>
+                        </div>
+                        <p class="item-desc">عجينة هشة ومحشوة بسخاء بشوكولاتة النوتيلا الأصلية.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 10 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="مافن الموز">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">مافن الموز والبندق</h4>
+                            <span class="item-price">$9.00</span>
+                        </div>
+                        <p class="item-desc">قطع الموز الطازج مع قطع البندق المحمص والقرفة الناعمة.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 11 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="تارت الليمون">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">تارت الليمون والمورينغ</h4>
+                            <span class="item-price">$16.50</span>
+                        </div>
+                        <p class="item-desc">حشوة الليمون الحامضة المتوازنة مع طبقة المورينغ المحمصة.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 12 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="سينامون رول">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">سينامون رول بالجوز</h4>
+                            <span class="item-price">$11.00</span>
+                        </div>
+                        <p class="item-desc">لفائف القرفة الساخنة مغطاة بصوص الجبن الكريمي والجوز.</p>
+                    </div>
+                </div>
+
+
+                <!-- ===== العمود الثالث (6 أصناف) ===== -->
+                <!-- صنف 13 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="بقلاوة بالفستق">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">بقلاوة مشكلة بالفستق</h4>
+                            <span class="item-price">$25.00</span>
+                        </div>
+                        <p class="item-desc">رقائق العجين الذهبية المحشوة بأجود أنواع الفستق الحلبي.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 14 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="كنافة بالجبن">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">كنافة نابلسية بالجبن</h4>
+                            <span class="item-price">$22.00</span>
+                        </div>
+                        <p class="item-desc">جبن عكاوي ناعم مع السمن الحيواني والقطر المعطر بماء الورد.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 15 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="معمول التمر">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">معمول التمر الفاخر</h4>
+                            <span class="item-price">$18.00</span>
+                        </div>
+                        <p class="item-desc">عجينة السميد الخالصة محشوة بتمر المجدول المهروس يدويًا.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 16 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Chocolate_cupcake_PNG__clear_background_-removebg-preview.png"
+                            alt="قهوة اسبريسو">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">قهوة إسبريسو دوبل</h4>
+                            <span class="item-price">$5.00</span>
+                        </div>
+                        <p class="item-desc">حبوب البن الإيطالية المهروسة بعناية لطعم قوي ومستخلص.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 17 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Download_free_png_of_PNG_An_isolated_luxury_cupcake_dessert_food_confectionery__about_vanilla_cupcake__cupcake__birthday_cupcake__vanilla_frosting__and_cake_15560733-removebg-preview.png"
+                            alt="لاتيه الفانيلا">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">لاتيه الفانيليا الدافئ</h4>
+                            <span class="item-price">$6.50</span>
+                        </div>
+                        <p class="item-desc">حليب طازج مبخر مع جرعة إسبريسو وصوص الفانيليا الفاخر.</p>
+                    </div>
+                </div>
+
+                <!-- صنف 18 -->
+                <div class="item-card">
+                    <div class="item-img-wrapper">
+                        <img src="./assets/Cupcake_PNG__Creamy_dessert_with_strawberry_-removebg-preview.png"
+                            alt="شاي الأعشاب">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <h4 class="item-title">شاي الأعشاب الفاخر</h4>
+                            <span class="item-price">$4.50</span>
+                        </div>
+                        <p class="item-desc">مزيج من البابونج، النعناع والأعشاب الطبيعية المهدئة.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GSAP & ScrollTrigger Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        let mm = gsap.matchMedia();
+
+        gsap.set(".content-panel", { y: 35, opacity: 0 });
+
+        // ==========================================
+        // أنيميشن GSAP للقسم الأول فقط (Hero Section)
+        // ==========================================
+        mm.add("(min-width: 901px)", () => {
+            const tl1 = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#scrollSection",
+                    start: "top top",
+                    end: "+=350%",
+                    scrub: 1.2,
+                    pin: true,
+                    anticipatePin: 1
+                }
+            });
+
+            tl1.to("#heroIntro", { opacity: 0, y: -40, duration: 0.5 }, 0)
+                .to("#brandBg", { color: "rgba(212, 175, 55, 0.15)", scale: 0.95, duration: 1 }, 0)
+                .to("#mainCake", { x: "25vw", y: "0vh", scale: 1.1, rotation: 6, duration: 1.5, ease: "power2.inOut" }, 0)
+                .to("#panelAbout", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0.5);
+
+            tl1.to("#panelAbout", { opacity: 0, y: -30, duration: 0.6 }, 2)
+                .to("#mainCake", { x: "-25vw", y: "0vh", rotation: -6, duration: 1.5, ease: "power2.inOut" }, 2)
+                .to("#panelQuality", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 2.5);
+
+            tl1.to("#panelQuality", { opacity: 0, y: -30, duration: 0.6 }, 4)
+                .to("#mainCake", { x: "0vw", y: "6vh", rotation: 0, scale: 1, duration: 1.5, ease: "power2.inOut" }, 4)
+                .to("#leftCake", { x: "-24vw", y: "6vh", opacity: 1, scale: 0.85, rotation: -12, duration: 1.5, ease: "power2.out" }, 4.2)
+                .to("#rightCake", { x: "24vw", y: "6vh", opacity: 1, scale: 0.85, rotation: 12, duration: 1.5, ease: "power2.out" }, 4.2)
+                .to("#panelTrio", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 4.5);
+        });
+
+        mm.add("(max-width: 900px)", () => {
+            const tl1 = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#scrollSection",
+                    start: "top top",
+                    end: "+=350%",
+                    scrub: 1.2,
+                    pin: true,
+                    anticipatePin: 1
+                }
+            });
+
+            tl1.to("#heroIntro", { opacity: 0, y: -25, duration: 0.5 }, 0)
+                .to("#brandBg", { color: "rgba(212, 175, 55, 0.12)", scale: 0.8, duration: 1 }, 0)
+                .to("#mainCake", { x: "22vw", y: "0vh", scale: 1, rotation: 6, duration: 1.5, ease: "power2.inOut" }, 0)
+                .to("#panelAbout", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0.5);
+
+            tl1.to("#panelAbout", { opacity: 0, y: -20, duration: 0.6 }, 2)
+                .to("#mainCake", { x: "-22vw", y: "0vh", rotation: -6, duration: 1.5, ease: "power2.inOut" }, 2)
+                .to("#panelQuality", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 2.5);
+
+            tl1.to("#panelQuality", { opacity: 0, y: -20, duration: 0.6 }, 4)
+                .to("#mainCake", { x: "0vw", y: "10vh", rotation: 0, scale: 0.8, duration: 1.5, ease: "power2.inOut" }, 4)
+                .to("#leftCake", { x: "-28vw", y: "10vh", opacity: 1, scale: 0.65, rotation: -8, duration: 1.5, ease: "power2.out" }, 4.2)
+                .to("#rightCake", { x: "28vw", y: "10vh", opacity: 1, scale: 0.65, rotation: 8, duration: 1.5, ease: "power2.out" }, 4.2)
+                .to("#panelTrio", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 4.5);
+        });
+    </script>
+
+</body>
+
+</html>
